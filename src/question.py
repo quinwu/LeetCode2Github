@@ -6,6 +6,7 @@ class Question:
     def __init__(self,num):
         self.num = num
         self.info = self._get_info(num)
+        self.solutions = []
 
     def _get_info(self,num):
         # all question information
@@ -26,6 +27,5 @@ class Question:
         return {
             'title':title,
             'url':url,
-            'solutions':'leetcode',
             'difficult':difficult,
         }
