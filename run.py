@@ -2,11 +2,14 @@ import os
 from src.generate import Readme
 from src.question import Question
 from src.utils import Config
+from src.leetcode import Leetcode
 from src.utils import get_config_from_file
+
 from collections import namedtuple
 
 HOME = os.getcwd()
 CONFIG_FILE = os.path.join(HOME, 'config','config.cfg')
+COOKIE_PATH = os.path.join(HOME,'config','cookies.json')
 
 
 ProgLang = namedtuple('ProgLang', ['language', 'ext', 'annotation'])
@@ -34,7 +37,16 @@ def test_question():
     readme.add_question(question)
     readme.write_readme()
 
-if __name__ == '__main__':
+def test_leetcode():
     CONFIG = get_config_from_file(CONFIG_FILE)
-    print (CONFIG)
-    print (ProgLangDict)
+    # print (CONFIG)
+    leetcode = Leetcode(CONFIG)
+    # if not leetcode.is_login():
+    #     leetcode.login()
+    # leetcode.load_submissison()
+
+if __name__ == '__main__':
+    # CONFIG = get_config_from_file(CONFIG_FILE)
+    # print (CONFIG)
+    # print (ProgLangDict)
+    test_leetcode()

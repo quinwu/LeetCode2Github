@@ -4,7 +4,6 @@ import time
 import json
 from selenium import webdriver
 
-COOKIE_PATH = 'cookies.json'
 BASE_URL = 'https://leetcode.com'
 # If you have proxy, change PROXIES below
 PROXIES = None
@@ -18,16 +17,19 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36',  # NOQA
 }
 
+HOME = os.getcwd()
+COOKIE_PATH = os.path.join(HOME,'config','cookies.json')
 
 class Leetcode:
-    def __int__(self,questions,CONFIG):
-        self.questions = questions
+
+    def __init__(self,config):
+        # self.questions = questions
         self.session = requests.session()
         self.session.headers.update(HEADERS)
         self.session.proxies = PROXIES
         self.session.cookies = None
         self.base_url = BASE_URL
-        self.config = CONFIG
+        self.config = config
 
     def login(self):
         LOGIN_URL = self.base_url + '/accounts/login/'
@@ -51,7 +53,7 @@ class Leetcode:
         driver.find_element_by_id('id_password').send_keys(passwd)
         driver.find_element_by_xpath('//button[@type="submit"]').click()
         time.sleep(5)
-        webdriver_cookies = driver.get_cookie()
+        webdriver_cookies = driver.get_cookies()
         driver.close()
 
         if 'LEETCODE_SESSION' not in [
@@ -65,11 +67,50 @@ class Leetcode:
             str(cookie['name']): str(cookie['value'])
             for cookie in webdriver_cookies
         }
+
+        print (self.cookies)
+
         self.session.cookies.update(self.cookies)
+
+    def is_login(self):
+        api_url = self.base_url + '/api/problems/algorithms/'
+        if not os.path.exists(COOKIE_PATH):
+            return False
+
+        with open(COOKIE_PATH,'r') as f:
+            webdriver_cookies = json.load(f)
+        self.cookies = {
+            str(cookie['name']) : str(cookie['value'])
+            for cookie in webdriver_cookies
+        }
+
+        self.session.cookies.update(self.cookies)
+        r = self.session.get(api_url,proxies = PROXIES)
+        if r.status_code != 200:
+            return False
+
+        data = json.loads(r.text)
+        return 'user_name' in data and data['user_name'] != ''
+
 
 
     def load_submissison(self):
-        pass
+        limit = 20
+        offset = 0
+
+        while True:
+            submissions_url = '{}/api/submissions/?format=json&limit={}&offset={}'.format(
+                self.base_url, limit, offset
+            )
+
+            resp = self.session.get(submissions_url,proxies=PROXIES)
+            assert resp.status_code == 200
+            data = resp.json()
+
+            if 'has_next' not in data.keys():
+                raise  Exception ('Get submissions wrong ,Check network \n')
+
+            print (data)
 
 
     def _download_code(self):
