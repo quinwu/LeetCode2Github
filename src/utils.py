@@ -1,6 +1,7 @@
 import os
 import configparser
 from collections import namedtuple
+import re
 
 ProgLang = namedtuple('ProLong',['language','ext','annotation'])
 ProgLangList = [
@@ -87,3 +88,10 @@ def get_config_from_file(CONFIG_FILE):
         driverpath=driverpath,
     )
     return config
+
+def rep_unicode_in_code(code):
+    pattern = re.compile('(\\\\u[0-9a-zA-Z]{4})')
+    m = pattern.findall(code)
+    for item in set(m):
+        code = code.replace(item, chr(int(item[2:], 16)))
+    return code

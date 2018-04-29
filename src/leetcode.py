@@ -3,6 +3,8 @@ import os
 import time
 import json
 from selenium import webdriver
+from src.utils import rep_unicode_in_code
+from src.question import Quiz
 
 BASE_URL = 'https://leetcode.com'
 # If you have proxy, change PROXIES below
@@ -24,12 +26,17 @@ class Leetcode:
 
     def __init__(self,config):
         # self.questions = questions
+
+        self.submissions = []
+
         self.session = requests.session()
+        # print (type(self.session))
         self.session.headers.update(HEADERS)
         self.session.proxies = PROXIES
-        self.session.cookies = None
+        self.cookies = None
         self.base_url = BASE_URL
         self.config = config
+
 
     def login(self):
         LOGIN_URL = self.base_url + '/accounts/login/'
@@ -67,11 +74,9 @@ class Leetcode:
             str(cookie['name']): str(cookie['value'])
             for cookie in webdriver_cookies
         }
-
-        print (self.cookies)
-
         self.session.cookies.update(self.cookies)
 
+    @property
     def is_login(self):
         api_url = self.base_url + '/api/problems/algorithms/'
         if not os.path.exists(COOKIE_PATH):
@@ -92,9 +97,34 @@ class Leetcode:
         data = json.loads(r.text)
         return 'user_name' in data and data['user_name'] != ''
 
+    def load_items_from_api(self,quizs):
+        api_url = self.base_url + '/api/problems/algorithms/'
+        r = self.session.get(api_url,proxies=PROXIES)
 
+        assert r.status_code == 200
 
-    def load_submissison(self):
+        rst = json.loads(r.text)
+
+        if not rst['user_name']:
+            raise Exception("Something wrong with your personal info.\n")
+
+    def _generate_items_from_api(self,json_data,quizs):
+        stat_staus_pairs = json_data['stat_status_pairs']
+        for quiz in stat_staus_pairs:
+            data = {}
+            data['question_title_slug'] = quiz['stat']['question_title_slug']
+            data['question_title'] = quiz['stat']['question_title']
+            data['level'] = quiz['difficulty']['level']
+            data['question_id'] = quiz['stat']['question_id']
+            data['status'] = quiz['status']
+            item = Quiz(**data)
+            yield item
+
+    def load_submission(self):
+        """
+        load all submissions
+        :return: all submissions
+        """
         limit = 20
         offset = 0
 
@@ -104,26 +134,24 @@ class Leetcode:
             )
 
             resp = self.session.get(submissions_url,proxies=PROXIES)
+            # print (resp.status_code)
+
             assert resp.status_code == 200
             data = resp.json()
 
             if 'has_next' not in data.keys():
                 raise  Exception ('Get submissions wrong ,Check network \n')
 
-            print (data)
+            self.submissions += data['submissions_dump']
+            if data['has_next']:
+                offset += limit
+            else:
+                break
+        # print (self.submissions)
 
-
-    def _download_code(self):
-        """
-        download code by question
-        :param
-        :return:
-        """
-        pass
-
-
-    def _get_code(self):
-        pass
-
-    def push_to_github(self):
-        pass
+    def load(self):
+        if not self.is_login:
+            print ('not login')
+            self.login()
+        print ('has login')
+        self.load_submission()

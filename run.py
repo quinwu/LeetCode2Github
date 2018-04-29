@@ -41,6 +41,7 @@ def test_leetcode():
     CONFIG = get_config_from_file(CONFIG_FILE)
     # print (CONFIG)
     leetcode = Leetcode(CONFIG)
+    leetcode.load()
     # if not leetcode.is_login():
     #     leetcode.login()
     # leetcode.load_submissison()
