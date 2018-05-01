@@ -3,12 +3,21 @@ import configparser
 from collections import namedtuple
 import re
 
-ProgLang = namedtuple('ProLong',['language','ext','annotation'])
+ProgLang = namedtuple('ProgLang', ['language', 'ext', 'annotation'])
 ProgLangList = [
-    ProgLang('cpp','cpp','//'),
-    ProgLang('python3','py','#'),
-    ProgLang('python','py','#')
+    ProgLang('cpp', 'cpp', '//'),
+    ProgLang('java', 'java', '//'),
+    ProgLang('python', 'py', '#'),
+    ProgLang('python3', 'py', '#'),
+    ProgLang('c', 'c', '//'),
+    ProgLang('csharp', 'cs', '//'),
+    ProgLang('javascript', 'js', '//'),
+    ProgLang('ruby', 'rb', '#'),
+    ProgLang('kotlin', 'kt', '//'),
+    ProgLang('swift', 'swift', '//'),
+    ProgLang('golang', 'go', '//'),
 ]
+ProgLangDict = dict((item.language, item) for item in ProgLangList)
 
 class Config:
     # local_path = 'C:/Users/Administrator/Desktop/git-project/LeetCode'
