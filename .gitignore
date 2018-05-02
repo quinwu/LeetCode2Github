@@ -1,6 +1,7 @@
 .vscode/*
 .idea/
 __pycache__/
-config/
+config/config1.cfg
+config/cookies.json
 .DS_Store
 all.json
