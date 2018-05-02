@@ -6,7 +6,7 @@ Automatically grab the LeetCode solutions uploaded to Github and generate `READM
 
 This is my [LeetCode Solutions](https://github.com/quinwu/LeetCode) GitHub repo.
 
-### config information
+### Config Information
 
 > config/config.cfg
 
@@ -32,7 +32,7 @@ Reference : [config/config.cfg.example](config/config.cfg.example)
 
     LeetCode repo path address on your local machine
 
-### requirements information
+### Requirements Information
 
 requirements Python env : [requirements.txt](requirements.txt)
 
@@ -55,7 +55,7 @@ Recommend using package management tools:
 
 ### Run
 
-#### Download by id
+#### Download by Problem ID
 
 > python run.py 1
 >
@@ -67,7 +67,7 @@ if you default python version not Python3.X
 >
 > python3 run.py 1 4 77
 
-#### Download All Accepted problems
+#### Download All Accepted Problems
 
 > ToDo
 
