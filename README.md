@@ -10,7 +10,7 @@ This is my [LeetCode Solutions](https://github.com/quinwu/LeetCode) GitHub repo.
 
 > config/config.cfg
 
-Reference : [config/config.cfg.example](config/config.cfg.example)
+Reference : [config/config.cfg.example](config/config.cfg.example)
 
 - `username` 
 
