@@ -75,7 +75,7 @@ if you default python version not Python3.X
 
 Python3 has tested 
 
-Python2 not guarantee
+Python2 not guaranteed
 
 ### Acknowledgement
 
