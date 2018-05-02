@@ -1,0 +1,9 @@
+[leetcode]
+
+username = username
+password = password
+language = python,python3,cpp
+;chromedriver Path
+driverpath = /usr/local/bin/chromedriver
+;LeetCode Local Path
+local_path = /home/quinwu/LeetCode
