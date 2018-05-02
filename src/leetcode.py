@@ -1,39 +1,18 @@
 import requests
 import os
 import time
+import datetime
 import re
 import json
+from collections import OrderedDict
 from selenium import webdriver
-from src.utils import rep_unicode_in_code
 from src.question import Quiz
-from collections import namedtuple, OrderedDict
-from src.utils import check_and_make_dir
-from src.utils import ProgLang,ProgLangList,ProgLangDict
 from src.generate import Readme
-
-LOCAL_PATH = '/Users/aemonwk/git-project/LeetCodeTest'
-BASE_URL = 'https://leetcode.com'
-
-# If you have proxy, change PROXIES below
-PROXIES = None
-HEADERS = {
-    'Accept': '*/*',
-    'Accept-Encoding': 'gzip,deflate,sdch',
-    'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-    'Connection': 'keep-alive',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Host': 'leetcode.com',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36',  # NOQA
-}
-
-HOME = os.getcwd()
-COOKIE_PATH = os.path.join(HOME,'config','cookies.json')
+from utils import check_and_make_dir,ProgLangDict,rep_unicode_in_code,HEADERS,PROXIES,BASE_URL,COOKIE_PATH
 
 class Leetcode:
 
     def __init__(self,config):
-
-        # todo modified config BASE_URL LOCAL_PATH
         self.base_url = BASE_URL
         self.config = config
 
@@ -43,16 +22,17 @@ class Leetcode:
         ]
         self.prolangdict = dict(zip(self.languages,proglangs))
 
+        self.num_solved = 0
+        self.num_total = 0
+
+        self.items = []
         self.submissions = []
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
         self.session.proxies = PROXIES
         self.cookies = None
 
-        self.README = Readme(LOCAL_PATH)
-
-        self.num_solved = 0
-        self.num_total = 0
+        self.README = Readme(self.config['local_path'])
 
     def login(self):
         LOGIN_URL = self.base_url + '/accounts/login/'
@@ -130,7 +110,6 @@ class Leetcode:
         if not rst['user_name']:
             raise Exception("Something wrong with your personal info.\n")
 
-        self.items = []
         self.num_solved = rst['num_solved']
         self.num_total = rst['num_total']
         self.items = list(self._generate_items_from_api(rst,quizs))
@@ -184,8 +163,7 @@ class Leetcode:
 
     def load_submission_to_items(self):
 
-        titles = [i.question_title for i in self.items]
-
+        titles = [i.title for i in self.items]
         itemdict = OrderedDict(zip(titles,self.items))
 
         def make_sub(sub):
@@ -221,6 +199,18 @@ class Leetcode:
             title = solution['title']
             if title in itemdict.keys():
                 itemdict[title].solutions.append(solution)
+
+        for item in itemdict.values():
+            py_solution = 0
+            sol = None
+            for solution in item.solutions:
+                if solution['lang'] == 'python' :
+                    py_solution += 1
+                    sol = solution
+                elif solution['lang'] == 'python3':
+                    py_solution += 1
+            if py_solution == 2:
+                item.solutions.remove(sol)
 
     def _get_code_by_solution(self,solution):
         """
@@ -267,12 +257,9 @@ class Leetcode:
             )
             return
 
-        # print ('chech_and_make_LOCAL_PATH')
-        # check_and_make_dir(LOCAL_PATH)
-
-        dirname = '{id}.%20{title}'.format(id=str(id).zfill(3),title=title)
+        dirname = '{id}. {title}'.format(id=str(id).zfill(3),title=title)
         print ('begin download'+ dirname)
-        path = os.path.join(LOCAL_PATH,dirname)
+        path = os.path.join(self.config['local_path'],dirname)
         print ('path is',path)
         check_and_make_dir(path)
 
@@ -290,7 +277,6 @@ class Leetcode:
                 print ('write to file -> ',fname)
                 f.write(code)
 
-
     def load(self,quizs):
         if not self.is_login:
             print ('not login')
@@ -304,3 +290,33 @@ class Leetcode:
         for quiz in self.items:
             time.sleep(1)
             self._download_code_by_quiz(quiz)
+
+    def write_README(self):
+        print ('start to write README')
+        for quiz in self.items:
+            self.README.add_question(quiz, self.languages, self.prolangdict)
+        self.README.update_readme(self.num_solved,self.num_total)
+        print ('write README done!')
+
+    def push_to_github(self):
+        print ('start push to GitHub')
+        strdate = datetime.datetime.now().strftime('%Y-%m-%d')
+        cmd_git_add = 'git add .'
+        cmd_git_commit = 'git commit -m "update at {date}"'.format(
+            date=strdate
+        )
+        cmd_git_push = 'git push -u origin master'
+        print (os.getcwd())
+        os.chdir(self.config['local_path'])
+        print (os.getcwd())
+        os.system(cmd_git_add)
+        os.system(cmd_git_commit)
+        os.system(cmd_git_push)
+        print ('push to GitHub done!')
+
+
+    def run(self,quizs):
+        self.load(quizs)
+        self.download()
+        self.write_README()
+        self.push_to_github()

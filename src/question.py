@@ -1,7 +1,4 @@
-import json
-import requests
-from src.utils import Config
-BASE_URL = 'https://leetcode.com'
+from utils import BASE_URL
 
 class Quiz:
     base_url = BASE_URL
@@ -28,7 +25,8 @@ class Quiz:
             'id',
             'difficulty',
             'url',
-            'title'
+            'title',
+            'title_slug',
         ]
         dct = self.__dict__
         for prop in addition_proporties:
@@ -58,3 +56,7 @@ class Quiz:
     @property
     def title(self):
         return self.question_title
+
+    @property
+    def title_slug(self):
+        return self.question_title_slug
