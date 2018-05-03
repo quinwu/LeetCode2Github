@@ -53,6 +53,38 @@ Recommend using package management tools:
 > pipenv install
 
 
+#### Windows
+
+- Make sure your Chrome is the latest version
+
+- Make sure your Python is the 3.X version and has installed requirements.txt packages
+
+- Make sure your Python path adding to Path environments variables
+
+- Download ChromeDriver to `Google Chrome Application directory`
+  > `Google Chrome Application directory` usually is `C:/Program Files (x86)/Google/Chrome/Application/`
+  
+- Setting environments variables
+  > add `C:/Program Files (x86)/Google/Chrome/Application/` to Path environments variables 
+
+
+> config/config.cfg 
+>
+>`driverpath = C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe`
+
+#### Linux or MacOS
+
+- Make sure your Chrome is the latest version
+
+- Make sure your Python is the 3.X version and has installed requirements.txt packages
+
+- Download ChromeDriver to `/usr/local/bin/`
+
+> config/config.cfg 
+>
+> `driverpath = /usr/local/bin/chromedriv`
+
+
 ### Run
 
 #### Download by Problem ID
