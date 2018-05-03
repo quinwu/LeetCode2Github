@@ -15,12 +15,15 @@ class Readme:
     def _init_readme_head(self,num_solved=0,num_total=742):
 
         """
-
-        :param num_solved:
-        :param num_total:
-        :return:
+        generate README prefix text
+        :param num_solved: solved problems number,default is 0
+        :param num_total: total problems number,default is 742
+        :return:None
         """
 
+        """
+        PREFIX_NUMBER is 9
+        """
         md = '''#  Leetcode solutions
 Update time:  {tm} 
 
@@ -39,9 +42,15 @@ I have solved **{num_solved}   /   {num_total}** problems
         self._write_file(md)
 
     def _del_row(self,row):
+        """
+        delete one row in self.table_content
+        :param row: need to delete row number
+        :return:
+        """
         self.table_content.pop(row)
 
     def _find_position(self,lists,num):
+
         re_id = re.compile(r"\|\d+\|")
         sort_nums = []
         for str in lists:
