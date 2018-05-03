@@ -34,7 +34,7 @@ Reference : [config/config.cfg.example](config/config.cfg.example)
 
 ### Requirements Information
 
-requirements Python env : [requirements.txt](requirements.txt)
+requirements Python packages : [requirements.txt](requirements.txt)
 
 Use `selenium` and `ChromeDriver`
 
@@ -46,7 +46,7 @@ Recommend using package management tools:
 
 - Anaconda
 
-> conda install
+> conda install 
 
 - Pipenv
 
@@ -63,7 +63,7 @@ Recommend using package management tools:
 
 - Download ChromeDriver to `Google Chrome Application directory`
   > `Google Chrome Application directory` usually is `C:/Program Files (x86)/Google/Chrome/Application/`
-  
+
 - Setting environments variables
   > add `C:/Program Files (x86)/Google/Chrome/Application/` to Path environments variables 
 
@@ -82,7 +82,7 @@ Recommend using package management tools:
 
 > config/config.cfg 
 >
-> `driverpath = /usr/local/bin/chromedriv`
+> `driverpath = /usr/local/bin/chromedriver`
 
 
 ### Run
