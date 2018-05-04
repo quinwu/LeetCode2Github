@@ -28,6 +28,8 @@ Reference : [config/config.cfg.example](config/config.cfg.example)
 
     [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) path address on your local machine
 
+    [How to Download ChromeDriver](https://germey.gitbooks.io/python3webspider/content/1.2.3-ChromeDriver%E7%9A%84%E5%AE%89%E8%A3%85.html)
+
 - `local_path`
 
     LeetCode repo path address on your local machine
@@ -55,7 +57,11 @@ Recommend using package management tools:
 
 #### Windows
 
-- Make sure your Chrome is the latest version
+- Make sure you have Chrome installed 
+
+- Check you Chrome version and download corresponding version ChromeDriver
+
+  > Input `chrome://help` in you Chrome address Bar check Chrome version
 
 - Make sure your Python is the 3.X version and has installed requirements.txt packages
 
@@ -74,8 +80,12 @@ Recommend using package management tools:
 
 #### Linux or MacOS
 
-- Make sure your Chrome is the latest version
+- Make sure you have Chrome installed
 
+- Check you Chrome version and download corresponding version ChromeDriver
+
+   > Input `chrome://help` in you Chrome address Bar check Chrome version
+  
 - Make sure your Python is the 3.X version and has installed requirements.txt packages
 
 - Download ChromeDriver to `/usr/local/bin/`
