@@ -120,19 +120,34 @@ class Leetcode:
 
         :param json_data: all problem status json data
         :param quizs: int list, each of list element mean each title frontend-question-id
+                        if quizs is empty , we want to download all Accepted problems
         :return:
         """
-        stat_staus_pairs = json_data['stat_status_pairs']
-        for quiz in stat_staus_pairs:
-            if quiz['stat']['frontend_question_id'] in quizs:
-                data = {}
-                data['question_id'] = quiz['stat']['frontend_question_id'] #id
-                data['question_title_slug'] = quiz['stat']['question__title_slug']   #title-slug
-                data['question_title'] = quiz['stat']['question__title'] #title
-                data['level'] = quiz['difficulty']['level']             #difficulty
-                data['status'] = quiz['status']
-                item = Quiz(**data)
-                yield item
+        if quizs:
+            stat_staus_pairs = json_data['stat_status_pairs']
+            # print (stat_staus_pairs)
+            for quiz in stat_staus_pairs:
+                if quiz['stat']['frontend_question_id'] in quizs:
+                    data = {}
+                    data['question_id'] = quiz['stat']['frontend_question_id'] #id
+                    data['question_title_slug'] = quiz['stat']['question__title_slug']   #title-slug
+                    data['question_title'] = quiz['stat']['question__title'] #title
+                    data['level'] = quiz['difficulty']['level']             #difficulty
+                    data['status'] = quiz['status']
+                    item = Quiz(**data)
+                    yield item
+        else:
+            stat_staus_pairs = json_data['stat_status_pairs']
+            for quiz in stat_staus_pairs:
+                if quiz['status'] == 'ac':
+                    data = {}
+                    data['question_id'] = quiz['stat']['frontend_question_id']
+                    data['question_title_slug'] = quiz['stat']['question__title_slug']
+                    data['question_title'] = quiz['stat']['question__title']
+                    data['level'] = quiz['difficulty']['level']
+                    data['status'] = quiz['status']
+                    item = Quiz(**data) 
+                    yield item
 
     def load_submission(self):
         """
