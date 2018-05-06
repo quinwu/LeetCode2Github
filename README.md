@@ -111,7 +111,9 @@ if you default python version not Python3.X
 
 #### Download All Accepted Problems
 
-> ToDo
+Download all accepted problems no need to give any parameters
+
+> python run.py
 
 ### Attention
 
