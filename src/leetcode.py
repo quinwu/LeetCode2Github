@@ -336,6 +336,7 @@ class Leetcode:
             date=strdate
         )
         cmd_git_push = 'git push -u origin master'
+        
         print (os.getcwd())
         os.chdir(self.config['local_path'])
         print (os.getcwd())
